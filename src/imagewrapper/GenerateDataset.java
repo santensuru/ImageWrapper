@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -113,7 +115,7 @@ public class GenerateDataset {
         System.out.println(DATASET.size());
     }
     
-    public boolean doChechThread() {
+    public boolean doCheckThread() {
         int i;
         for (i=0; i<THREADS.size(); i++) {
             Thread current = THREADS.get(i);
@@ -125,5 +127,18 @@ public class GenerateDataset {
                 THREADS.remove(i);
         }
         return false;
+    }
+    
+    public boolean doShortingData() {
+        Collections.sort(DATASET, new Comparator< Pair<String, String> >() {
+            public int compare(Pair p1, Pair p2) {
+               return Float.compare(Float.valueOf(p1.getRight().toString()), Float.valueOf(p2.getRight().toString()));
+            }
+        });
+        return true;
+    }
+    
+    public ArrayList<Pair<String, String>> getDataset() {
+        return DATASET;
     }
 }
