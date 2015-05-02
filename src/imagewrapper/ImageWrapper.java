@@ -56,7 +56,8 @@ public class ImageWrapper {
         
         System.out.println("minning done");
         
-        File input = new File("2.jpg");
+       File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
+//        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
         // image + 1
         int partX = 6; //width
         int partY = 6; //height
