@@ -51,14 +51,19 @@ public class ImageWrapper {
         
         DATASET = dataset.getDataset();
         
+//        for (int i=0; i<DATASET.size(); i++) {
+//            System.out.println(DATASET.get(i).getLeft());
+//        }
+        
         long end = new Date().getTime();
         
         System.out.println(end-start);
         
         System.out.println("minning done");
         
-        File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
+//        File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
+        File input = new File("C:\\Users\\user\\Downloads\\Sunrise_over_a_Chinese_landscape_mountains.jpg");
         // image + 1
         int partX = 10; //width
         int partY = 10; //height
@@ -149,18 +154,20 @@ public class ImageWrapper {
 //        frame1.add(mainPanel1);
 //        frame1.setVisible(true);
         
-        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         m=1; n=0;
         int p, q;
+        int len = DATASET.size();
         for (k=0; k<=partY; k++) {
 //            n=0;
             o=0;
             for (l=0; l<=partX; l++) {
-                String Path = DATASET.get(DATASET.size()-m).getLeft();
+                String Path = DATASET.get(len-m).getLeft();
+//                System.out.println(len + " " + m + " " + Path);
                 File data = new File(Path);
                 BufferedImage dataInput = ImageIO.read(data);
-                BufferedImage resize = new BufferedImage(partWidth, partHeight, BufferedImage.TYPE_INT_RGB);
-                resize = createResizedCopy(dataInput, partWidth, partHeight, false);
+                BufferedImage resize = new BufferedImage(partWidth, partHeight, BufferedImage.TYPE_INT_ARGB);
+                resize = createResizedCopy(dataInput, partWidth, partHeight, true);
                 
 //                o=0;
                 // lemot
@@ -175,9 +182,10 @@ public class ImageWrapper {
                 o += partWidth;
 //                System.out.println(m + " " + k + " " + l);
                 m++;
-                if (DATASET.size()-m < 0) {
+                if (len-m < 0) {
                     m=1;
                 }
+//                System.out.println(m);
             }
 //            o += partWidth;
             n += partHeight;
