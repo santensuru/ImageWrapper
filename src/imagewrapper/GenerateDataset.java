@@ -47,7 +47,8 @@ public class GenerateDataset {
 //                System.out.println(fileEntry.getAbsolutePath());
             } else if (fileEntry.getName().contains(".jpg") || fileEntry.getName().contains(".png")) {
                 String color = doCheckColor(fileEntry);
-                DATASET.add(new Pair(fileEntry.getAbsolutePath(), color));
+                if (!color.matches("0.0"))
+                    DATASET.add(new Pair(fileEntry.getAbsolutePath(), color));
 //                System.out.println(fileEntry.getAbsolutePath() + " " + color);
             }
         }
@@ -129,12 +130,20 @@ public class GenerateDataset {
         return false;
     }
     
-    public boolean doShortingData() {
-        Collections.sort(DATASET, new Comparator< Pair<String, String> >() {
-            public int compare(Pair p1, Pair p2) {
-               return Float.compare(Float.valueOf(p1.getRight().toString()), Float.valueOf(p2.getRight().toString()));
-            }
-        });
+    public boolean doShortingData(boolean pair) {
+        if (pair == false) {
+            Collections.sort(DATASET, new Comparator< Pair<String, String> >() {
+                public int compare(Pair p1, Pair p2) {
+                   return Float.compare(Float.valueOf(p1.getRight().toString()), Float.valueOf(p2.getRight().toString()));
+                }
+            });
+        } else {
+            Collections.sort(DATASET, new Comparator< Pair<String, String> >() {
+                public int compare(Pair p1, Pair p2) {
+                   return p1.getLeft().toString().compareTo(p2.getLeft().toString());
+                }
+            });
+        }
         return true;
     }
     

@@ -37,14 +37,15 @@ public class ImageWrapper {
         
         long start = new Date().getTime();
         
-        GenerateDataset dataset = new GenerateDataset("C:\\cygwin64\\home\\user\\coba\\SISTER\\");
+//        GenerateDataset dataset = new GenerateDataset("C:\\cygwin64\\home\\user\\coba\\SISTER\\");
+        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Pictures\\");
         while (dataset.doCheckThread()) {
             
         }
         
 //        dataset.doCheckList();
         
-        dataset.doShortingData();
+        dataset.doShortingData(false);
         
 //        dataset.doCheckList();
         
@@ -60,7 +61,7 @@ public class ImageWrapper {
 //        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
         // image + 1
         int partX = 10; //width
-        int partY = 100; //height
+        int partY = 10; //height
         
         BufferedImage image = ImageIO.read(input);
         
