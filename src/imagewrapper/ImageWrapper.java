@@ -35,32 +35,32 @@ public class ImageWrapper {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
-        long start = new Date().getTime();
+//        long start = new Date().getTime();
+//        
+//        GenerateDataset dataset = new GenerateDataset("C:\\cygwin64\\home\\user\\coba\\SISTER\\");
+//        while (dataset.doCheckThread()) {
+//            
+//        }
+//        
+////        dataset.doCheckList();
+//        
+//        dataset.doShortingData();
+//        
+////        dataset.doCheckList();
+//        
+//        DATASET = dataset.getDataset();
+//        
+//        long end = new Date().getTime();
+//        
+//        System.out.println(end-start);
+//        
+//        System.out.println("minning done");
         
-        GenerateDataset dataset = new GenerateDataset("C:\\cygwin64\\home\\user\\coba\\SISTER\\");
-        while (dataset.doCheckThread()) {
-            
-        }
-        
-//        dataset.doCheckList();
-        
-        dataset.doShortingData();
-        
-//        dataset.doCheckList();
-        
-        DATASET = dataset.getDataset();
-        
-        long end = new Date().getTime();
-        
-        System.out.println(end-start);
-        
-        System.out.println("minning done");
-        
-       File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
+        File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
         // image + 1
-        int partX = 6; //width
-        int partY = 6; //height
+        int partX = 1000; //width
+        int partY = 1000; //height
         
         BufferedImage image = ImageIO.read(input);
         
@@ -98,8 +98,10 @@ public class ImageWrapper {
                         Color.RGBtoHSB(R, G, B, HSV);
 
                         H[m] += HSV[0];
+//                        System.out.println(k + " " + l + " " + i + " " + j);
                     }
 //                    o += partWidth;
+//                    System.out.println(k + " " + l + " " + m);
                 }
 //                n += partHeight;
                 o += partWidth;
@@ -109,27 +111,28 @@ public class ImageWrapper {
             n += partHeight;
         }
         
-//        BufferedImage output = new BufferedImage(partX, partY, BufferedImage.TYPE_INT_RGB);
-//        
-//        for (i=0; i<partY; i++) {
-//            for (j=0; j<partX; j++) {
-//                float majority = H[i*partY+j] / ( partWidth * partHeight );
-//                System.out.print(majority + " ");
-//                output.setRGB(j, i, Color.HSBtoRGB(majority, 1, 0.5f));
-//            }
-//            System.out.println("");
-//        }
-//        
-//        JFrame frame = new JFrame();
-//        frame.setSize(width, height);
-//
-//        JLabel lblimage = new JLabel(new ImageIcon(output));
-//        
-//        JPanel mainPanel = new JPanel(new BorderLayout());
-//        mainPanel.add(lblimage);
-//        // add more components here
-//        frame.add(mainPanel);
-//        frame.setVisible(true);
+        BufferedImage output = new BufferedImage(partX+1, partY+1, BufferedImage.TYPE_INT_RGB);
+        
+        for (i=0; i<=partY; i++) {
+            for (j=0; j<=partX; j++) {
+                float majority = H[i*(partY+1)+j] / ( partWidth * partHeight );
+//                System.out.println(i + " " + j);
+                System.out.print(majority + " ");
+                output.setRGB(j, i, Color.HSBtoRGB(majority, 1, 0.5f));
+            }
+            System.out.println("");
+        }
+        
+        JFrame frame = new JFrame();
+        frame.setSize(width, height);
+
+        JLabel lblimage = new JLabel(new ImageIcon(output));
+        
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(lblimage);
+        // add more components here
+        frame.add(mainPanel);
+        frame.setVisible(true);
 //        
 //        BufferedImage resize = new BufferedImage(partX, partY, BufferedImage.TYPE_INT_RGB);
 //        resize = createResizedCopy(image.getScaledInstance(width, height, 0), partX, partY, false);
@@ -145,47 +148,47 @@ public class ImageWrapper {
 //        frame1.add(mainPanel1);
 //        frame1.setVisible(true);
         
-        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        m=1; n=0;
-        int p, q;
-        for (k=0; k<=partY; k++) {
-//            n=0;
-            o=0;
-            for (l=0; l<=partX; l++) {
-                String Path = DATASET.get(DATASET.size()-m).getLeft();
-                File data = new File(Path);
-                BufferedImage dataInput = ImageIO.read(data);
-                BufferedImage resize = new BufferedImage(partWidth, partHeight, BufferedImage.TYPE_INT_RGB);
-                resize = createResizedCopy(dataInput, partWidth, partHeight, false);
-                
-//                o=0;
-                // lemot
-                for (i=n, p=0; i<n+partHeight && i<height; i++, p++) {
-                    for (j=o, q=0; j<o+partWidth && j< width; j++, q++) {
-                        output.setRGB(j, i, resize.getRGB(q, p));
-                        System.out.println(i + " " + j +  " " + q + " " + p);
-                    }
-//                    o += partWidth;
-                }
-//                n += partHeight;
-                o += partWidth;
-                System.out.println(m + " " + k + " " + l);
-                m++;
-            }
-//            o += partWidth;
-            n += partHeight;
-        }
-        
-        JFrame frame = new JFrame();
-        frame.setSize(width, height);
-
-        JLabel lblimage = new JLabel(new ImageIcon(output));
-        
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(lblimage);
-        // add more components here
-        frame.add(mainPanel);
-        frame.setVisible(true);
+//        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//        m=1; n=0;
+//        int p, q;
+//        for (k=0; k<=partY; k++) {
+////            n=0;
+//            o=0;
+//            for (l=0; l<=partX; l++) {
+//                String Path = DATASET.get(DATASET.size()-m).getLeft();
+//                File data = new File(Path);
+//                BufferedImage dataInput = ImageIO.read(data);
+//                BufferedImage resize = new BufferedImage(partWidth, partHeight, BufferedImage.TYPE_INT_RGB);
+//                resize = createResizedCopy(dataInput, partWidth, partHeight, false);
+//                
+////                o=0;
+//                // lemot
+//                for (i=n, p=0; i<n+partHeight && i<height; i++, p++) {
+//                    for (j=o, q=0; j<o+partWidth && j< width; j++, q++) {
+//                        output.setRGB(j, i, resize.getRGB(q, p));
+//                        System.out.println(i + " " + j +  " " + q + " " + p);
+//                    }
+////                    o += partWidth;
+//                }
+////                n += partHeight;
+//                o += partWidth;
+//                System.out.println(m + " " + k + " " + l);
+//                m++;
+//            }
+////            o += partWidth;
+//            n += partHeight;
+//        }
+//        
+//        JFrame frame = new JFrame();
+//        frame.setSize(width, height);
+//
+//        JLabel lblimage = new JLabel(new ImageIcon(output));
+//        
+//        JPanel mainPanel = new JPanel(new BorderLayout());
+//        mainPanel.add(lblimage);
+//        // add more components here
+//        frame.add(mainPanel);
+//        frame.setVisible(true);
         
     }
     
