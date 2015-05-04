@@ -31,6 +31,7 @@ public class ImageWrapper {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
@@ -65,8 +66,8 @@ public class ImageWrapper {
 //        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
         File input = new File("C:\\Users\\user\\Downloads\\Sunrise_over_a_Chinese_landscape_mountains.jpg");
         // image + 1
-        int partX = 10; //width
-        int partY = 10; //height
+        int partX = 100; //width
+        int partY = 100; //height
         
         BufferedImage image = ImageIO.read(input);
         
@@ -162,11 +163,12 @@ public class ImageWrapper {
 //            n=0;
             o=0;
             for (l=0; l<=partX; l++) {
-                String Path = DATASET.get(len-m).getLeft();
+                String Path = doBinarySearch(DATASET, String.valueOf(H[m-1] / ( partWidth * partHeight )));
+//                String Path = DATASET.get(len-m).getLeft();
 //                System.out.println(len + " " + m + " " + Path);
                 File data = new File(Path);
                 BufferedImage dataInput = ImageIO.read(data);
-                BufferedImage resize = new BufferedImage(partWidth, partHeight, BufferedImage.TYPE_INT_ARGB);
+                BufferedImage resize;// = new BufferedImage(partWidth, partHeight, BufferedImage.TYPE_INT_ARGB);
                 resize = createResizedCopy(dataInput, partWidth, partHeight, true);
                 
 //                o=0;
@@ -182,9 +184,9 @@ public class ImageWrapper {
                 o += partWidth;
 //                System.out.println(m + " " + k + " " + l);
                 m++;
-                if (len-m < 0) {
-                    m=1;
-                }
+//                if (len-m < 0) {
+//                    m=1;
+//                }
 //                System.out.println(m);
             }
 //            o += partWidth;
@@ -220,7 +222,31 @@ public class ImageWrapper {
     	return scaledBI;
     }
     
-    // copy image
+    // binary search
+    public static String doBinarySearch(ArrayList<Pair<String, String>> a, String b) {
+        if (a.isEmpty()) {
+            return "";
+        }
+        int low = 0;
+        int high = a.size()-1;
+        int middle = 0; 
+        
+        while(low <= high) {
+            middle = (low+high) /2;
+            if ( Float.valueOf(b) > Float.valueOf(a.get(middle).getRight() ) ){
+                low = middle +1;
+            } else if ( Float.valueOf(b) < Float.valueOf(a.get(middle).getRight() ) ){
+                high = middle -1;
+            } else { // The element has been found
+                System.out.println(a.get(middle).getRight() + " " + b);
+                return a.get(middle).getLeft(); 
+            }
+        }
+        System.out.println(a.get(middle).getRight() + " " + b);
+        return a.get(middle).getLeft();
+    }
+    
+    // fast copy image
     private static void copySrcIntoDstAt(final BufferedImage src,
             final BufferedImage dst, final int dx, final int dy) {
         int[] srcbuf = ((DataBufferInt) src.getRaster().getDataBuffer()).getData();
