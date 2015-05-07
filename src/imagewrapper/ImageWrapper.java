@@ -36,10 +36,13 @@ public class ImageWrapper {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
+        int c = 3;
+        
         long start = new Date().getTime();
         
 //        GenerateDataset dataset = new GenerateDataset("C:\\cygwin64\\home\\user\\coba\\SISTER\\");
-        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Pictures\\");
+//        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Pictures\\");
+        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Downloads\\image dataset\\102flowers\\", c);
         while (dataset.doCheckThread()) {
             
         }
@@ -51,6 +54,7 @@ public class ImageWrapper {
 //        dataset.doCheckList();
         
         DATASET = dataset.getDataset();
+//        System.out.println(DATASET.size());
         
 //        for (int i=0; i<DATASET.size(); i++) {
 //            System.out.println(DATASET.get(i).getLeft());
@@ -58,21 +62,24 @@ public class ImageWrapper {
         
         long end = new Date().getTime();
         
-        System.out.println(end-start);
+//        System.out.println(etaConvert(end-start));
         
-        System.out.println("minning done");
+        System.out.println("minning done: " + etaConvert(end-start));
         
 //        File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
-//        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
-        File input = new File("C:\\Users\\user\\Downloads\\Sunrise_over_a_Chinese_landscape_mountains.jpg");
-        // image + 1
-        int partX = 100; //width
-        int partY = 100; //height
+        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
+//        File input = new File("C:\\Users\\user\\Downloads\\Sunrise_over_a_Chinese_landscape_mountains.jpg");
+//        File input = new File("C:\\Users\\user\\Downloads\\485022_429990987054621_128395817_n.jpg");
+//        File input = new File("C:\\Users\\user\\Downloads\\EasternQingTombs_ROW7254196386_1366x768.jpg");
         
         BufferedImage image = ImageIO.read(input);
         
         int width = image.getWidth(null);
         int height = image.getHeight(null);
+        
+        // image + 1
+        int partX = width / c; //width
+        int partY = height / c; //height
         
         int temp;
         int R;
@@ -238,11 +245,11 @@ public class ImageWrapper {
             } else if ( Float.valueOf(b) < Float.valueOf(a.get(middle).getRight() ) ){
                 high = middle -1;
             } else { // The element has been found
-                System.out.println(a.get(middle).getRight() + " " + b);
+//                System.out.println(a.get(middle).getRight() + " " + b);
                 return a.get(middle).getLeft(); 
             }
         }
-        System.out.println(a.get(middle).getRight() + " " + b);
+//        System.out.println(a.get(middle).getRight() + " " + b);
         return a.get(middle).getLeft();
     }
     
@@ -258,6 +265,26 @@ public class ImageWrapper {
         for (int y = 0 ; y < height ; y++ , dstoffs+= dst.getWidth(), srcoffs += width ) {
             System.arraycopy(srcbuf, srcoffs , dstbuf, dstoffs, width);
         }
+    }
+    
+    private static String etaConvert(long l_d) {
+        String eta = "";
+        long ms = l_d % 1000;
+        l_d /= 1000;
+        if (l_d >= 86400) {
+            eta += String.valueOf(l_d/86400) + " d ";
+            l_d %= 86400;
+        }
+        if (l_d >= 3600) {
+            eta += String.valueOf(l_d/3600) + " h ";
+            l_d %= 3600;
+        }
+        if (l_d >= 60) {
+            eta += String.valueOf(l_d/60) + " m ";
+            l_d %= 60;
+        }
+        eta += String.valueOf(l_d) + "." + String.valueOf(ms) + " s";
+        return eta;
     }
     
 }

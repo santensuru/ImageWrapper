@@ -5,7 +5,10 @@
  */
 package imagewrapper;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,9 +27,11 @@ public class GenerateDataset {
     private static File ROOTPATH;
     private static volatile ArrayList<Pair<String, String>> DATASET = new ArrayList<>();
     private static ArrayList<Thread> THREADS = new ArrayList<>();
+    private static int CONST;
     
-    public GenerateDataset(String path) throws IOException {
+    public GenerateDataset(String path, int c) throws IOException {
         ROOTPATH = new File(path);
+        CONST = c;
         
         // generate dataset
 //        doListDataset(ROOTPATH);
@@ -73,7 +78,8 @@ public class GenerateDataset {
     }
     
     private String doCheckColor(final File raw) throws IOException {
-        BufferedImage image = ImageIO.read(raw);
+        BufferedImage image = createResizedCopy( ImageIO.read(raw), CONST, CONST, true );
+//        BufferedImage image = ImageIO.read(raw);
         
         int width = image.getWidth(null);
         int height = image.getHeight(null);
@@ -105,6 +111,22 @@ public class GenerateDataset {
         float majority = H / ( width * height );
         
         return String.valueOf(majority);
+    }
+    
+    // resize
+    private static BufferedImage createResizedCopy(Image originalImage, 
+    		int scaledWidth, int scaledHeight, 
+    		boolean preserveAlpha) {
+//    	System.out.println("resizing...");
+    	int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+    	BufferedImage scaledBI = new BufferedImage(scaledWidth, scaledHeight, imageType);
+    	Graphics2D g = scaledBI.createGraphics();
+    	if (preserveAlpha) {
+    		g.setComposite(AlphaComposite.Src);
+    	}
+    	g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null); 
+    	g.dispose();
+    	return scaledBI;
     }
     
     public void doCheckList() {
