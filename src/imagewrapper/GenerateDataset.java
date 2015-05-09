@@ -90,6 +90,7 @@ public class GenerateDataset {
         int B;
         float[] HSV = new float[3];
         float H = 0.0f;
+        float S = 0.0f;
         
         Color color;
         
@@ -104,11 +105,13 @@ public class GenerateDataset {
                 
                 Color.RGBtoHSB(R, G, B, HSV);
                 
-                H += HSV[0];
+                H += (HSV[0] * HSV[1]);
+                S += HSV[1];
             }
         }
         
-        float majority = H / ( width * height );
+//        float majority = H / ( width * height );
+        float majority = H / S;
         
         return String.valueOf(majority);
     }

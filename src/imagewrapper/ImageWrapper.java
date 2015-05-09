@@ -89,6 +89,7 @@ public class ImageWrapper {
         int B;
         float[] HSV = new float[3];
         float H[] = new float[(partX+1)*(partY+1)];
+        float S[] = new float[(partX+1)*(partY+1)];
         
         Color color;
         
@@ -102,6 +103,7 @@ public class ImageWrapper {
             for (l=0; l<=partX; l++) {
 //                System.out.println(k + " " + l);
                 H[m] = 0.0f;
+                S[m] = 0.0f;
 //                o=0;
                 for (i=n; i<n+partHeight && i<height; i++) {
                     for (j=o; j<o+partWidth && j<width; j++) {
@@ -113,7 +115,8 @@ public class ImageWrapper {
 
                         Color.RGBtoHSB(R, G, B, HSV);
 
-                        H[m] += HSV[0];
+                        H[m] += (HSV[0] * HSV[1]);
+                        S[m] += HSV[1];
 //                        System.out.println(k + " " + l + " " + i + " " + j);
                     }
 //                    o += partWidth;
@@ -172,7 +175,8 @@ public class ImageWrapper {
 //            n=0;
             o=0;
             for (l=0; l<=partX; l++) {
-                String Path = doBinarySearch(DATASET, String.valueOf(H[m-1] / ( partWidth * partHeight )));
+                String Path = doBinarySearch(DATASET, String.valueOf(H[m-1] / S[m-1]));
+//                String Path = doBinarySearch(DATASET, String.valueOf(H[m-1] / ( partWidth * partHeight )));
 //                String Path = DATASET.get(len-m).getLeft();
 //                System.out.println(len + " " + m + " " + Path);
                 File data = new File(Path);
