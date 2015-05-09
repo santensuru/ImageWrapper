@@ -36,7 +36,7 @@ public class ImageWrapper {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
-        int c = 3;
+        int c = 1;
         
         long start = new Date().getTime();
         
@@ -65,6 +65,8 @@ public class ImageWrapper {
 //        System.out.println(etaConvert(end-start));
         
         System.out.println("minning done: " + etaConvert(end-start));
+        
+        start = new Date().getTime();
         
 //        File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
         File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
@@ -199,6 +201,10 @@ public class ImageWrapper {
 //            o += partWidth;
             n += partHeight;
         }
+        
+        end = new Date().getTime();
+        
+        System.out.println("matching done: " + etaConvert(end-start));
         
         JFrame frame = new JFrame();
         frame.setSize(width, height);
