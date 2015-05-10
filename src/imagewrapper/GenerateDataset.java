@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -26,7 +25,7 @@ import javax.imageio.ImageIO;
 public class GenerateDataset {
     private static File ROOTPATH;
     private static volatile ArrayList<Pair<String, String>> DATASET = new ArrayList<>();
-    private static ArrayList<Thread> THREADS = new ArrayList<>();
+    private static final ArrayList<Thread> THREADS = new ArrayList<>();
     private static int CONST;
     
     public GenerateDataset(String path, int c) throws IOException {
@@ -35,6 +34,13 @@ public class GenerateDataset {
         
         // generate dataset
 //        doListDataset(ROOTPATH);
+//        Thread task = new doListDatasetThread(ROOTPATH);
+//        task.setName(ROOTPATH.getAbsolutePath());
+//        THREADS.add(task);
+//        task.start();
+    }
+    
+    public void doInitList() {
         Thread task = new doListDatasetThread(ROOTPATH);
         task.setName(ROOTPATH.getAbsolutePath());
         THREADS.add(task);
@@ -52,7 +58,7 @@ public class GenerateDataset {
 //                System.out.println(fileEntry.getAbsolutePath());
             } else if (fileEntry.getName().contains(".jpg") || fileEntry.getName().contains(".png")) {
                 String color = doCheckColor(fileEntry);
-                if (!color.matches("0.0"))
+//                if (!color.matches("0.0"))
                     DATASET.add(new Pair(fileEntry.getAbsolutePath(), color));
 //                System.out.println(fileEntry.getAbsolutePath() + " " + color);
             }
@@ -60,9 +66,9 @@ public class GenerateDataset {
     }
     
     private class doListDatasetThread extends Thread {
-        private File folder;
+        private final File folder;
         
-        doListDatasetThread(final File folder) {
+        private doListDatasetThread(final File folder) {
             this.folder = folder;
 //            System.out.println(folder.getAbsolutePath());
         }
@@ -111,7 +117,12 @@ public class GenerateDataset {
         }
         
 //        float majority = H / ( width * height );
-        float majority = H / S;
+        float majority;
+        if (S == 0.0f) {
+            majority = 1.0f;
+        } else {
+            majority = H / S;
+        }
         
         return String.valueOf(majority);
     }
@@ -157,17 +168,9 @@ public class GenerateDataset {
     
     public boolean doShortingData(boolean pair) {
         if (pair == false) {
-            Collections.sort(DATASET, new Comparator< Pair<String, String> >() {
-                public int compare(Pair p1, Pair p2) {
-                   return Float.compare(Float.valueOf(p1.getRight().toString()), Float.valueOf(p2.getRight().toString()));
-                }
-            });
+            Collections.sort(DATASET, (Pair p1, Pair p2) -> Float.compare(Float.valueOf(p1.getRight().toString()), Float.valueOf(p2.getRight().toString())));
         } else {
-            Collections.sort(DATASET, new Comparator< Pair<String, String> >() {
-                public int compare(Pair p1, Pair p2) {
-                   return p1.getLeft().toString().compareTo(p2.getLeft().toString());
-                }
-            });
+            Collections.sort(DATASET, (Pair p1, Pair p2) -> p1.getLeft().toString().compareTo(p2.getLeft().toString()));
         }
         return true;
     }
