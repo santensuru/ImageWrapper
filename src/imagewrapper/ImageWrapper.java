@@ -36,13 +36,13 @@ public class ImageWrapper {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
-        int c = 4;
+        int c = 1;
         
         long start = new Date().getTime();
         
 //        GenerateDataset dataset = new GenerateDataset("C:\\cygwin64\\home\\user\\coba\\SISTER\\");
-        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Pictures\\", 1);
-//        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Downloads\\image dataset\\102flowers\\", 1);
+//        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Pictures\\", 1);
+        GenerateDataset dataset = new GenerateDataset("C:\\Users\\user\\Downloads\\image dataset\\102flowers\\", 1);
         
         dataset.doInitList();
         
@@ -72,11 +72,11 @@ public class ImageWrapper {
         start = new Date().getTime();
         
 //        File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
-//        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
+        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\Sunrise_over_a_Chinese_landscape_mountains.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\485022_429990987054621_128395817_n.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\EasternQingTombs_ROW7254196386_1366x768.jpg");
-        File input = new File("C:\\Users\\user\\Downloads\\Lenovo-Vibe-Z2-Pro-1.jpg");
+//        File input = new File("C:\\Users\\user\\Downloads\\Lenovo-Vibe-Z2-Pro-1.jpg");
         
         BufferedImage image = ImageIO.read(input);
         
