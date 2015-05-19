@@ -8,14 +8,21 @@ package imagewrapper;
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.RGBImageFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.scene.effect.Blend;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -36,7 +43,7 @@ public class ImageWrapper {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         
-        int c = 1;
+        int c = 16;
         
         long start = new Date().getTime();
         
@@ -72,9 +79,9 @@ public class ImageWrapper {
         start = new Date().getTime();
         
 //        File input = new File("C:\\Users\\user\\Downloads\\177660878_12119866_2460693.jpg");
-        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
+//        File input = new File("C:\\Users\\user\\Downloads\\27747_129550677058587_6498350_n-edit.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\Sunrise_over_a_Chinese_landscape_mountains.jpg");
-//        File input = new File("C:\\Users\\user\\Downloads\\485022_429990987054621_128395817_n.jpg");
+        File input = new File("C:\\Users\\user\\Downloads\\485022_429990987054621_128395817_n.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\EasternQingTombs_ROW7254196386_1366x768.jpg");
 //        File input = new File("C:\\Users\\user\\Downloads\\Lenovo-Vibe-Z2-Pro-1.jpg");
         
@@ -215,17 +222,31 @@ public class ImageWrapper {
             n += partHeight;
         }
         
+//        BufferedImage tempOutput = ImageToBufferedImage(TransformColorToTransparency(output, Color.WHITE, Color.BLACK), width, height);
+//        
+//        //combined
+//        BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//
+//        // paint both images, preserving the alpha channels
+//        Graphics g = combined.getGraphics();
+//        g.drawImage(image, 0, 0, null);
+//        g.drawImage(tempOutput, 0, 0, null);
+        
+//        BufferedImage combined = blend(image, output, 2);
+        
         end = new Date().getTime();
         
         System.out.println("matching done: " + etaConvert(end-start));
         
         JFrame frame = new JFrame();
-        frame.setSize(width, height);
+        frame.setSize(width + 50, height + 100);
 
         JLabel lblimage = new JLabel(new ImageIcon(output));
         
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(lblimage);
+        mainPanel.setAlignmentX(width/2);
+        mainPanel.setAlignmentY(height/2);
         // add more components here
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -306,4 +327,96 @@ public class ImageWrapper {
         return eta;
     }
     
+    private static Image TransformColorToTransparency(BufferedImage image, Color c1, Color c2)
+    {
+        // Primitive test, just an example
+        final int r1 = c1.getRed();
+        final int g1 = c1.getGreen();
+        final int b1 = c1.getBlue();
+        final int r2 = c2.getRed();
+        final int g2 = c2.getGreen();
+        final int b2 = c2.getBlue();
+        ImageFilter filter = new RGBImageFilter()
+        {
+            public final int filterRGB(int x, int y, int rgb)
+            {
+                int r = (rgb & 0xFF0000) >> 16;
+                int g = (rgb & 0xFF00) >> 8;
+                int b = rgb & 0xFF;
+                if (r >= r1 && r <= r2 &&
+                    g >= g1 && g <= g2 &&
+                    b >= b1 && b <= b2)
+                {
+                    // Set fully transparent but keep color
+                    return rgb & 0xFFFFFF;
+                }
+                return rgb;
+            }
+        };
+
+        ImageProducer ip = new FilteredImageSource(image.getSource(), filter);
+        return Toolkit.getDefaultToolkit().createImage(ip);
+    }
+
+    private static BufferedImage ImageToBufferedImage(Image image, int width, int height)
+    {
+        BufferedImage dest = new BufferedImage(
+            width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = dest.createGraphics();
+        g2.drawImage(image, 0, 0, null);
+        g2.dispose();
+        return dest;
+    }
+    
+    private static BufferedImage blend (BufferedImage bi1, BufferedImage bi2,
+                double weight)
+    {
+        if (bi1 == null)
+            throw new NullPointerException ("bi1 is null");
+
+        if (bi2 == null)
+            throw new NullPointerException ("bi2 is null");
+
+        int width = bi1.getWidth ();
+        if (width != bi2.getWidth ())
+            throw new IllegalArgumentException ("widths not equal");
+
+        int height = bi1.getHeight ();
+        if (height != bi2.getHeight ())
+            throw new IllegalArgumentException ("heights not equal");
+
+        BufferedImage bi3 = new BufferedImage (width, height,
+                            BufferedImage.TYPE_INT_RGB);
+        int [] rgbim1 = new int [width];
+        int [] rgbim2 = new int [width];
+        int [] rgbim3 = new int [width];
+
+        for (int row = 0; row < height; row++)
+        {
+            bi1.getRGB (0, row, width, 1, rgbim1, 0, width);
+            bi2.getRGB (0, row, width, 1, rgbim2, 0, width);
+
+            for (int col = 0; col < width; col++)
+            {
+                int rgb1 = rgbim1 [col];
+                int r1 = (rgb1 >> 16) & 255;
+                int g1 = (rgb1 >> 8) & 255;
+                int b1 = rgb1 & 255;
+
+                int rgb2 = rgbim2 [col];
+                int r2 = (rgb2 >> 16) & 255;
+                int g2 = (rgb2 >> 8) & 255;
+                int b2 = rgb2 & 255;
+
+                int r3 = (int) (r1*weight+r2*(1.0-weight));
+                int g3 = (int) (g1*weight+g2*(1.0-weight));
+                int b3 = (int) (b1*weight+b2*(1.0-weight));
+                rgbim3 [col] = (r3 << 16) | (g3 << 8) | b3;
+            }
+
+            bi3.setRGB (0, row, width, 1, rgbim3, 0, width);
+        }
+
+        return bi3;
+    }
 }
