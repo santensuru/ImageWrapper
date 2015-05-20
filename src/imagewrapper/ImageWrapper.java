@@ -204,7 +204,7 @@ public class ImageWrapper {
                 // lemot
                 for (i=n, p=0; i<n+partHeight && i<height; i++, p++) {
                     for (j=o, q=0; j<o+partWidth && j< width; j++, q++) {
-                        output.setRGB(j, i, resize.getRGB(q, p));
+                        output.setRGB(j, i, 0x88 << 24 | resize.getRGB(q, p));
 //                        System.out.println(i + " " + j +  " " + q + " " + p);
                     }
 //                    o += partWidth;
@@ -223,16 +223,16 @@ public class ImageWrapper {
         }
         
 //        BufferedImage tempOutput = ImageToBufferedImage(TransformColorToTransparency(output, Color.WHITE, Color.BLACK), width, height);
-//        
+        
 //        //combined
 //        BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 //
 //        // paint both images, preserving the alpha channels
 //        Graphics g = combined.getGraphics();
 //        g.drawImage(image, 0, 0, null);
-//        g.drawImage(tempOutput, 0, 0, null);
+//        g.drawImage(output, 0, 0, null);
         
-//        BufferedImage combined = blend(image, output, 2);
+        BufferedImage combined = blend(image, output, 0.85);
         
         end = new Date().getTime();
         
@@ -241,7 +241,7 @@ public class ImageWrapper {
         JFrame frame = new JFrame();
         frame.setSize(width + 50, height + 100);
 
-        JLabel lblimage = new JLabel(new ImageIcon(output));
+        JLabel lblimage = new JLabel(new ImageIcon(combined));
         
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(lblimage);
