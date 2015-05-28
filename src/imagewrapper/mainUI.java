@@ -219,7 +219,7 @@ public class mainUI extends javax.swing.JFrame {
 
             // image + 1
             int partX = width / 16; //width
-            int partY = height / 9; //height
+            int partY = height / 16; //height
 
             int temp;
             int R;
@@ -292,7 +292,7 @@ public class mainUI extends javax.swing.JFrame {
             }
             
             // end
-            BufferedImage combined = ImageWrapper.blend(image, output, 0.65);
+            BufferedImage combined = ImageWrapper.blend(image, output, 0.85);
         
             long end = new Date().getTime();
 
